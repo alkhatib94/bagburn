@@ -57,7 +57,9 @@ export default function BurnInterface({ selectedNFTs, onBurnComplete }: BurnInte
     if (approvalChecks.data && address && CONTRACTS.BAG_BURN) {
       const approvalStatus: Record<string, boolean> = {};
       uniqueContracts.forEach((contract, index) => {
-        const isApproved = approvalChecks.data?.[index]?.result as boolean;
+        const result = approvalChecks.data?.[index]?.result;
+        // isApprovedForAll returns bigint (0n or 1n), convert to boolean
+        const isApproved = result === true || result === 1n || result === BigInt(1);
         approvalStatus[contract] = !isApproved;
       });
       setNeedsApproval(approvalStatus);
