@@ -51,12 +51,23 @@ export function useNFTsFromAPI() {
             
             if (!response.ok) {
               console.warn(`BaseScan API error for ${contract.name}: HTTP ${response.status}`);
+              // If rate limited, wait longer before continuing
+              if (response.status === 429) {
+                await new Promise(resolve => setTimeout(resolve, 5000));
+              }
               continue;
             }
             
             const data = await response.json();
 
             console.log(`BaseScan API response for ${contract.name}:`, data);
+
+            // Handle rate limiting from BaseScan API
+            if (data.status === "0" && data.message && (data.message.includes("rate limit") || data.message.includes("NOTOK"))) {
+              console.warn(`BaseScan API rate limited for ${contract.name}, waiting...`);
+              await new Promise(resolve => setTimeout(resolve, 5000));
+              continue;
+            }
 
             if (data.status === "1" && data.result && Array.isArray(data.result)) {
               // Track current ownership by processing all transfers chronologically

@@ -27,8 +27,23 @@ export default function NFTList({ selectedNFTs, onSelectionChange }: NFTListProp
   // Only use contract NFTs if they exist AND contract loading is done
   const shouldUseContractNFTs = nftsFromContract.length > 0 && !isLoadingContract;
   const nfts = shouldUseContractNFTs ? nftsFromContract : nftsFromAPI;
-  const isLoading = isLoadingContract && isLoadingAPI;
+  // isLoading should be true if EITHER is loading (not both)
+  const isLoading = isLoadingContract || isLoadingAPI;
   const error = contractError || apiError;
+
+  // Debug logging
+  useEffect(() => {
+    console.log("NFTList Debug:", {
+      nftsFromContract: nftsFromContract.length,
+      nftsFromAPI: nftsFromAPI.length,
+      isLoadingContract,
+      isLoadingAPI,
+      shouldUseContractNFTs,
+      finalNFTs: nfts.length,
+      contractError: contractError?.message,
+      apiError: apiError?.message,
+    });
+  }, [nftsFromContract.length, nftsFromAPI.length, isLoadingContract, isLoadingAPI, shouldUseContractNFTs, nfts.length, contractError, apiError]);
 
   useEffect(() => {
     setMounted(true);

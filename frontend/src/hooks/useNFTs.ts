@@ -73,7 +73,8 @@ export function useNFTs() {
   }, [balances, address, balancesLoading, nftContracts]);
 
   // Only fetch if we have contracts and not too many (to avoid rate limiting)
-  const shouldFetchTokenIds = tokenContracts.length > 0 && tokenContracts.length <= MAX_NFTS_PER_CONTRACT * 2 && !balancesLoading;
+  // Also check if we have balances first
+  const shouldFetchTokenIds = tokenContracts.length > 0 && tokenContracts.length <= MAX_NFTS_PER_CONTRACT * 2 && !balancesLoading && balances !== undefined;
   
   const { data: tokenIds, isLoading: tokenIdsLoading, error: tokenIdsError } = useReadContracts({
     contracts: tokenContracts,
