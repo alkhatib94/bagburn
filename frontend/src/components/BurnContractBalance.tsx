@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useReadContract, useWatchBlockNumber } from "wagmi";
+import { useReadContract } from "wagmi";
 import { formatUnits } from "viem";
 import { CONTRACTS, ERC20_ABI } from "@/config/contracts";
 
@@ -12,28 +12,16 @@ export default function BurnContractBalance() {
     setMounted(true);
   }, []);
 
-  const { data: balance, refetch } = useReadContract({
+  const { data: balance } = useReadContract({
     address: CONTRACTS.USDC as `0x${string}`,
     abi: ERC20_ABI,
     functionName: "balanceOf",
     args: CONTRACTS.BAG_BURN ? [CONTRACTS.BAG_BURN as `0x${string}`] : undefined,
     query: {
       enabled: !!CONTRACTS.BAG_BURN,
+      // Poll every 60 seconds instead of watching blocks to avoid rate limiting
+      refetchInterval: 60000,
     },
-  });
-
-  // Watch for new blocks to update balance (throttled to avoid rate limiting)
-  const [lastRefetch, setLastRefetch] = useState(0);
-  useWatchBlockNumber({
-    onBlockNumber() {
-      // Only refetch every 30 seconds to avoid rate limiting
-      const now = Date.now();
-      if (now - lastRefetch > 30000) {
-        refetch();
-        setLastRefetch(now);
-      }
-    },
-    enabled: !!CONTRACTS.BAG_BURN,
   });
 
   const formattedBalance = balance

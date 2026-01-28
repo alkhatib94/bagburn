@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { useReadContract, useReadContracts, useWatchBlockNumber } from "wagmi";
+import { useReadContract, useReadContracts } from "wagmi";
 import { CONTRACTS, ERC721_ABI, BAG_BURN_ABI } from "@/config/contracts";
 
 interface NFTStatsData {
@@ -33,10 +33,12 @@ export default function NFTStats() {
     functionName: "totalSupply" as const,
   })), []);
 
-  const { data: totalSupplies, refetch: refetchTotalSupply, error: totalSupplyError } = useReadContracts({
+  const { data: totalSupplies, error: totalSupplyError } = useReadContracts({
     contracts: totalSupplyContracts,
     query: {
       retry: false, // Don't retry if totalSupply is not supported
+      // Poll every 60 seconds instead of watching blocks to avoid rate limiting
+      refetchInterval: 60000,
     },
   });
 
@@ -48,27 +50,14 @@ export default function NFTStats() {
     args: CONTRACTS.BAG_BURN ? [CONTRACTS.BAG_BURN as `0x${string}`] : undefined,
   })), []);
 
-  const { data: burnedCounts, refetch: refetchBurned } = useReadContracts({
+  const { data: burnedCounts } = useReadContracts({
     contracts: CONTRACTS.BAG_BURN ? burnedContracts : [],
     query: {
       enabled: !!CONTRACTS.BAG_BURN,
       staleTime: 30000, // Cache for 30 seconds
+      // Poll every 60 seconds instead of watching blocks to avoid rate limiting
+      refetchInterval: 60000,
     },
-  });
-
-  // Watch for new blocks to update stats (throttled to avoid too many requests)
-  const [lastRefetch, setLastRefetch] = useState(0);
-  useWatchBlockNumber({
-    onBlockNumber() {
-      // Only refetch every 30 seconds to avoid rate limiting
-      const now = Date.now();
-      if (now - lastRefetch > 30000) {
-        refetchTotalSupply();
-        refetchBurned();
-        setLastRefetch(now);
-      }
-    },
-    enabled: true,
   });
 
   // Update stats when data changes
