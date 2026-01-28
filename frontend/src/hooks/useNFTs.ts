@@ -57,7 +57,7 @@ export function useNFTs() {
     const contracts: any[] = [];
     balances.forEach((balance, index) => {
       const balanceValue = balance.result as bigint | undefined;
-      if (balanceValue && balanceValue > 0n) {
+      if (balanceValue && balanceValue > BigInt(0)) {
         const count = Math.min(Number(balanceValue), MAX_NFTS_PER_CONTRACT);
         for (let i = 0; i < count; i++) {
           contracts.push({
@@ -156,7 +156,7 @@ export function useNFTs() {
 
     balances?.forEach((balance, idx) => {
       const balanceValue = balance.result as bigint | undefined;
-      if (balanceValue && balanceValue > 0n) {
+      if (balanceValue && balanceValue > BigInt(0)) {
         const count = Number(balanceValue);
         const contractAddress = nftContracts[idx].address;
         
