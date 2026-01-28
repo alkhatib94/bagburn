@@ -16,6 +16,9 @@ const metadata = {
   icons: ["https://bagburn.com/icon.png"],
 };
 
+// Use Alchemy RPC for Base Mainnet
+const BASE_RPC_URL = process.env.NEXT_PUBLIC_BASE_RPC_URL || "https://base-mainnet.g.alchemy.com/v2/K6MeXHLnJLUn6JqvkId-P";
+
 export const wagmiConfig = createConfig({
   chains: [base, baseSepolia],
   connectors: [
@@ -23,7 +26,7 @@ export const wagmiConfig = createConfig({
     ...(projectId ? [walletConnect({ projectId, metadata, showQrModal: true })] : []),
   ],
   transports: {
-    [base.id]: http(undefined, {
+    [base.id]: http(BASE_RPC_URL, {
       retryCount: 2,
       retryDelay: 1000,
     }),
