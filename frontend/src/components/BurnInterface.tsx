@@ -245,7 +245,13 @@ export default function BurnInterface({ selectedNFTs, onBurnComplete }: BurnInte
         <div className="mb-4 space-y-2">
           {uniqueContracts.map((contract) => {
             const needsApprove = needsApproval[contract];
-            const contractName = selectedNFTs.find(nft => nft.contract === contract)?.contractName || contract;
+            // Get contract name from address
+            const contractName = 
+              contract.toLowerCase() === CONTRACTS.BAG_CARDANO_NFT.toLowerCase() 
+                ? "BAG Cornucopias (Cardano)"
+                : contract.toLowerCase() === CONTRACTS.BAG_BASE_NFT.toLowerCase()
+                ? "BAG Cornucopias (BASE)"
+                : contract;
             
             if (needsApprove) {
               return (
