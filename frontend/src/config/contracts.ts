@@ -8,7 +8,7 @@ export const CONTRACTS = {
   USDC: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
   
   // BAGBurn contract (update after deployment)
-  BAG_BURN: process.env.NEXT_PUBLIC_BAG_BURN_ADDRESS || "",
+  BAG_BURN: process.env.NEXT_PUBLIC_BAG_BURN_ADDRESS || "0xD53c1D0C340b4A6d375035dbc3fBa3b33C4A9461",
 };
 
 // Burn values in USDC (with 6 decimals)
