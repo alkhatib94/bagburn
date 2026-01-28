@@ -16,7 +16,7 @@ export default function BurnContractBalance() {
     address: CONTRACTS.USDC as `0x${string}`,
     abi: ERC20_ABI,
     functionName: "balanceOf",
-    args: CONTRACTS.BAG_BURN ? [CONTRACTS.BAG_BURN] : undefined,
+    args: CONTRACTS.BAG_BURN ? [CONTRACTS.BAG_BURN as `0x${string}`] : undefined,
     query: {
       enabled: !!CONTRACTS.BAG_BURN,
     },

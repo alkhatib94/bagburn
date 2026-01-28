@@ -45,7 +45,7 @@ export default function NFTStats() {
     address: nft.address as `0x${string}`,
     abi: ERC721_ABI,
     functionName: "balanceOf" as const,
-    args: CONTRACTS.BAG_BURN ? [CONTRACTS.BAG_BURN] : undefined,
+    args: CONTRACTS.BAG_BURN ? [CONTRACTS.BAG_BURN as `0x${string}`] : undefined,
   })), []);
 
   const { data: burnedCounts, refetch: refetchBurned } = useReadContracts({
