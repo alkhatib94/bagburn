@@ -64,7 +64,7 @@ export default function BurnInterface({ selectedNFTs, onBurnComplete }: BurnInte
           if (typeof result === 'boolean') {
             isApproved = result;
           } else if (typeof result === 'bigint') {
-            isApproved = result !== 0n;
+            isApproved = result !== BigInt(0);
           }
         }
         approvalStatus[contract] = !isApproved;
