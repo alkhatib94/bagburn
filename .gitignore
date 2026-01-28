@@ -1,0 +1,35 @@
+node_modules/
+.env
+.env.local
+.env*.local
+cache/
+artifacts/
+coverage/
+coverage.json
+typechain/
+typechain-types/
+
+# Hardhat files
+.hardhat/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Frontend build files
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/.vercel
+
+# Images in root (should be in public/)
+frontend/BAG MAIN.png
+frontend/idECUXGIk-_logos(1).jpeg
+frontend/usd-coin-usdc-logo.png
