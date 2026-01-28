@@ -23,11 +23,18 @@ export default function USDCBalance() {
     },
   });
 
-  // Watch for new blocks to update balance
+  // Watch for new blocks to update balance (throttled to avoid rate limiting)
+  const [lastRefetch, setLastRefetch] = useState(0);
   useWatchBlockNumber({
     onBlockNumber() {
-      refetch();
+      // Only refetch every 30 seconds to avoid rate limiting
+      const now = Date.now();
+      if (now - lastRefetch > 30000) {
+        refetch();
+        setLastRefetch(now);
+      }
     },
+    enabled: isConnected && !!address,
   });
 
   const formattedBalance = balance

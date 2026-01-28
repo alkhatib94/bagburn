@@ -9,10 +9,13 @@ import { initWeb3Modal } from "@/config/web3modal";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 2,
-      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+      retry: 1, // Reduce retries to avoid rate limiting
+      retryDelay: (attemptIndex) => Math.min(2000 * 2 ** attemptIndex, 10000),
       refetchOnWindowFocus: false,
-      staleTime: 30000, // 30 seconds
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      staleTime: 60000, // 60 seconds - cache longer to reduce requests
+      gcTime: 300000, // 5 minutes - keep in cache longer
     },
   },
 });
