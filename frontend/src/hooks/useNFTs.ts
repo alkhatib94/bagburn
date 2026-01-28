@@ -134,11 +134,15 @@ export function useNFTs() {
 
     // If we have errors (especially rate limiting), return empty (will trigger API fallback)
     if (hasTokenIdErrors) {
-      const hasRateLimitError = tokenIds?.some((t) => 
-        t.error?.message?.includes("rate limit") || 
-        t.error?.message?.includes("429") ||
-        t.error?.code === -32016
-      );
+      const hasRateLimitError = tokenIds?.some((t) => {
+        if (!t.error) return false;
+        const error = t.error as any;
+        return (
+          error?.message?.includes("rate limit") || 
+          error?.message?.includes("429") ||
+          error?.code === -32016
+        );
+      });
       if (hasRateLimitError) {
         console.warn("Rate limit detected, switching to API fallback");
       } else {
